@@ -17,6 +17,7 @@ struct Sidebar: View {
                 .scaledToFit()
                 .foregroundStyle(.white)
                 .frame(width: 27, height: 27)
+                .frame(width: railWidth, height: buttonSize)
                 .padding(.bottom, 26)
 
             ForEach(mainPages) { page in
@@ -52,18 +53,24 @@ struct Sidebar: View {
 
     private func iconButton(symbol: String, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: symbol)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(selected ? .white : .white.opacity(0.62))
-                .frame(width: buttonSize, height: buttonSize)
-                .background(selected ? Color.white.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: 14))
-                .overlay {
-                    if selected {
-                        RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12))
-                    }
+            ZStack {
+                if selected {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(Color.white.opacity(0.12))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        }
+                        .frame(width: buttonSize, height: buttonSize)
                 }
-                .frame(width: railWidth)
-                .contentShape(Rectangle())
+
+                Image(systemName: symbol)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(selected ? .white : .white.opacity(0.62))
+                    .frame(width: buttonSize, height: buttonSize)
+            }
+            .frame(width: railWidth, height: buttonSize, alignment: .center)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .help(symbol)
