@@ -26,6 +26,9 @@ enum EngineBridge {
                 return "Lancement Epic impossible : \(error.localizedDescription)"
             }
         default:
+            if let launchURL = game.launchURL, NSWorkspace.shared.open(launchURL) {
+                return "Lancement transmis au moteur GameHub local."
+            }
             openEngine()
             return "Gestionnaire local ouvert pour installer ce jeu."
         }

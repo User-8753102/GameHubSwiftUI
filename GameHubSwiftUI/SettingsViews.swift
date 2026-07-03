@@ -209,20 +209,22 @@ private struct LocalAccountsSettings: View {
 }
 
 struct GameSettingsView: View {
+    @ObservedObject var appState: AppState
+    let game: Game
     let navigate: (AppRoute) -> Void
     @State private var selected = "steam"
 
     var body: some View {
         HStack(spacing: 0) {
-            SettingsSidebar(items: gameItems, selected: $selected, back: { navigate(.detail(.buckshot)) })
+            SettingsSidebar(items: gameItems, selected: $selected, back: { navigate(.detail(game)) })
             Group {
                 switch selected {
-                case "general": GameGeneralSettings()
-                case "container": ContainerSettings()
-                case "compat": CompatibilitySettings()
-                case "graphics": GraphicsSettings()
+                case "general": GameGeneralSettings(settings: game.settings ?? .placeholder)
+                case "container": ContainerSettings(game: game)
+                case "compat": CompatibilitySettings(settings: game.settings ?? .placeholder)
+                case "graphics": GraphicsSettings(settings: game.settings ?? .placeholder)
                 case "deps": DependenciesSettings()
-                default: SteamGameSettings()
+                default: SteamGameSettings(settings: game.settings ?? .placeholder)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -372,9 +374,16 @@ private struct StorageSettings: View {
 }
 
 private struct SteamGameSettings: View {
-    @State private var offline = false
-    @State private var cloud = false
-    @State private var input = false
+    @State private var offline: Bool
+    @State private var cloud: Bool
+    @State private var input: Bool
+
+    init(settings: GameSettings) {
+        _offline = State(initialValue: settings.offlineMode)
+        _cloud = State(initialValue: settings.cloudSaves)
+        _input = State(initialValue: settings.steamInput)
+    }
+
     var body: some View {
         SettingsPage(title: "Steam") {
             SettingsCard {
@@ -388,24 +397,33 @@ private struct SteamGameSettings: View {
 }
 
 private struct GameGeneralSettings: View {
-    @State private var retina = false
+    let settings: GameSettings
+    @State private var retina: Bool
+
+    init(settings: GameSettings) {
+        self.settings = settings
+        _retina = State(initialValue: settings.retinaMode)
+    }
+
     var body: some View {
         SettingsPage(title: "General") {
             SettingsCard {
-                SettingRow(symbol: "character.book.closed", title: "Language", subtitle: "Set Wine container system language", trailing: "Follow System")
+                SettingRow(symbol: "character.book.closed", title: "Language", subtitle: "Set Wine container system language", trailing: settings.language == "system" ? "Follow System" : settings.language)
                 SettingRow(symbol: "display", title: "Retina Mode", subtitle: "Enable Wine Mac Driver high-resolution rendering when launching the game", toggle: $retina)
                 SettingRow(symbol: "curlybraces", title: "Environment variables", subtitle: "Configure environment variables for special app requirements", button: "+")
-                SettingRow(symbol: "terminal", title: "Launch options", subtitle: "Add launch parameters to enable features or fix compatibility issues")
+                SettingRow(symbol: "terminal", title: "Launch options", subtitle: "Add launch parameters to enable features or fix compatibility issues", trailing: settings.startParameters.isEmpty ? "default" : settings.startParameters)
             }
         }
     }
 }
 
 private struct ContainerSettings: View {
+    let game: Game
     private let rows = [("square.and.arrow.down", "Install App", "Install an exe or msi program"), ("externaldrive", "Open C Drive", "Open the virtual C drive in Finder"), ("gearshape", "Wine Settings", "Adjust Wine compatibility and runtime options"), ("folder", "Resource Manager", "Browse and manage game files"), ("waveform.path.ecg", "Task Manager", "View and stop running processes"), ("globe", "Internet Settings", "Configure network and proxy options"), ("gamecontroller", "Game Controllers", "Set up controllers and gamepads"), ("display", "Display Settings", "Adjust resolution and desktop display"), ("play", "Run...", "Open the Windows Run dialog to execute commands or programs")]
     var body: some View {
         SettingsPage(title: "Container") {
             SettingsCard {
+                SettingRow(symbol: game.platform.symbol, title: game.name, subtitle: game.installPath ?? "No local folder detected", trailing: game.platform.label)
                 ForEach(rows, id: \.1) { SettingRow(symbol: $0.0, title: $0.1, subtitle: $0.2, trailing: "") }
                 SettingRow(symbol: "arrow.counterclockwise", title: "Reset Data", subtitle: "Clear this game's runtime data and reinitialize", trailing: "", destructive: true)
             }
@@ -414,15 +432,24 @@ private struct ContainerSettings: View {
 }
 
 private struct CompatibilitySettings: View {
-    @State private var decode = false
-    @State private var gamepad = false
-    @State private var avx = false
+    let settings: GameSettings
+    @State private var decode: Bool
+    @State private var gamepad: Bool
+    @State private var avx: Bool
+
+    init(settings: GameSettings) {
+        self.settings = settings
+        _decode = State(initialValue: settings.bypassAVDecode)
+        _gamepad = State(initialValue: settings.gamepadCompatMode)
+        _avx = State(initialValue: settings.avxEnabled)
+    }
+
     var body: some View {
         SettingsPage(title: "Compat") {
             SettingsCard {
                 SettingRow(symbol: "slider.horizontal.3", title: "Compatibility scheme", subtitle: "Use the recommended scheme or customize it yourself", button: "Sync latest cloud config")
-                SettingRow(symbol: "square.3.layers.3d", title: "Compatibility layer", subtitle: "Choose a Wine version. Different versions provide different compatibility.", trailing: "wine-proton_11.0")
-                SettingRow(symbol: "arrow.triangle.2.circlepath", title: "Sync mode", subtitle: "Choose Wine sync mechanism. Different modes affect performance and compatibility.", trailing: "MSync")
+                SettingRow(symbol: "square.3.layers.3d", title: "Compatibility layer", subtitle: "Choose a Wine version. Different versions provide different compatibility.", trailing: settings.compatibilityLayer)
+                SettingRow(symbol: "arrow.triangle.2.circlepath", title: "Sync mode", subtitle: "Choose Wine sync mechanism. Different modes affect performance and compatibility.", trailing: settings.syncMode.uppercased())
                 SettingRow(symbol: "movieclapper", title: "Skip audio/video decode", subtitle: "Use a black screen for CG cutscenes to mitigate compatibility issues.", toggle: $decode)
                 SettingRow(symbol: "gamecontroller", title: "Gamepad compatibility mode", subtitle: "Enable a dedicated gamepad service process to improve controller compatibility.", toggle: $gamepad)
                 SettingRow(symbol: "cpu", title: "AVX Instructions", subtitle: "Enable Rosetta AVX instruction set emulation, required by some games", toggle: $avx)
@@ -432,16 +459,24 @@ private struct CompatibilitySettings: View {
 }
 
 private struct GraphicsSettings: View {
-    @State private var hud = false
-    @State private var dlss = false
+    let settings: GameSettings
+    @State private var hud: Bool
+    @State private var dlss: Bool
+
+    init(settings: GameSettings) {
+        self.settings = settings
+        _hud = State(initialValue: settings.metalHUDEnabled)
+        _dlss = State(initialValue: settings.dlssMode != "disabled")
+    }
+
     var body: some View {
         SettingsPage(title: "Graphics") {
             SettingsCard {
                 SettingRow(symbol: "gauge", title: "MetalHUD", subtitle: "Show the Metal performance HUD overlay in-game", toggle: $hud)
-                SettingRow(symbol: "display", title: "Switch Graphics Stack", subtitle: "Choose the DirectX to Metal conversion method, or use Wine D3D native rendering", trailing: "gptk-3.0-3")
+                SettingRow(symbol: "display", title: "Switch Graphics Stack", subtitle: "Choose the DirectX to Metal conversion method, or use Wine D3D native rendering", trailing: settings.graphicsStack)
                 SettingRow(symbol: "sparkles", title: "DLSS Support", subtitle: "Only applies to GPTK and DXMT graphics stacks and enables DLSS-related support", toggle: $dlss)
-                SettingRow(symbol: "bolt", title: "Ray Tracing", subtitle: "Control DirectX Raytracing (DXR) support", trailing: "Auto")
-                SettingRow(symbol: "flask", title: "Switch MoltenVK", subtitle: "Choose MoltenVK version for Vulkan to Metal conversion", trailing: "builtin")
+                SettingRow(symbol: "bolt", title: "Ray Tracing", subtitle: "Control DirectX Raytracing (DXR) support", trailing: settings.rayTracingMode.capitalized)
+                SettingRow(symbol: "flask", title: "Switch MoltenVK", subtitle: "Choose MoltenVK version for Vulkan to Metal conversion", trailing: settings.moltenVK)
                 SettingRow(symbol: "folder", title: "Open Shader Cache", subtitle: "Manage your shader compilation cache", trailing: "")
             }
             SettingsCard { SettingRow(symbol: "doc.badge.gearshape", title: "Graphics Stack Exceptions", subtitle: "Override graphics stack for specific exe files", button: "Add exception") }

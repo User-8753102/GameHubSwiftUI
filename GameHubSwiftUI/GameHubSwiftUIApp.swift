@@ -2,8 +2,8 @@ import SwiftUI
 import AppKit
 
 private enum AppWindowMetrics {
-    static let minimumWidth: CGFloat = 1440
-    static let minimumHeight: CGFloat = 760
+    static let minimumWidth: CGFloat = 860
+    static let minimumHeight: CGFloat = 620
     static let defaultWidth: CGFloat = 1440
     static let defaultHeight: CGFloat = 900
 
