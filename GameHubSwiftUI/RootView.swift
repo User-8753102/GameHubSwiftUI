@@ -50,6 +50,7 @@ struct RootView: View {
 
             if showSearch {
                 SearchOverlay(isPresented: $showSearch)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .zIndex(10)
             }
         }

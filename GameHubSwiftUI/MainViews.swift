@@ -1,5 +1,9 @@
 import SwiftUI
 
+private enum PageMetrics {
+    static let contentMinWidth: CGFloat = 1080
+}
+
 struct HomeView: View {
     let navigate: (AppRoute) -> Void
     private let trending = [
@@ -78,6 +82,7 @@ struct HomeView: View {
             .padding(.horizontal, 54)
             .padding(.top, 44)
             .padding(.bottom, 50)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
@@ -102,8 +107,10 @@ struct RankingsView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
             .padding(54)
+            .frame(minWidth: PageMetrics.contentMinWidth, maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
@@ -167,6 +174,7 @@ struct BrowseView: View {
                 }
             }
             .padding(54)
+            .frame(minWidth: PageMetrics.contentMinWidth, maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
@@ -201,12 +209,15 @@ struct LibraryView: View {
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
 
                     AccountsPanel()
                         .frame(width: 330)
                 }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
             .padding(54)
+            .frame(minWidth: PageMetrics.contentMinWidth, maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
@@ -316,11 +327,14 @@ struct GameDetailView: View {
                         }
                         .padding(24).glassPanel(radius: 18)
                     }
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
 
                     GameInfoPanel(game: game).frame(width: 350)
                 }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
             .padding(54)
+            .frame(minWidth: PageMetrics.contentMinWidth, maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
@@ -374,6 +388,7 @@ struct DownloadsView: View {
                 .glassPanel(radius: 28)
             }
             .padding(54)
+            .frame(minWidth: PageMetrics.contentMinWidth, maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
