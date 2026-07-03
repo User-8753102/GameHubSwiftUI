@@ -38,12 +38,13 @@ struct RootView: View {
                 }
             }
             .padding(.leading, showsSidebar ? Sidebar.width : 0)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .clipped()
 
             if showsSidebar {
                 Sidebar(selected: selectedPage, navigate: navigate, showSearch: { showSearch = true })
                     .frame(width: Sidebar.width)
+                    .layoutPriority(1000)
                     .zIndex(1)
             }
 
