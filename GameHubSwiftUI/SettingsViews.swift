@@ -37,7 +37,12 @@ private struct SettingsSidebar: View {
             if let back {
                 Button(action: back) {
                     Label("Back", systemImage: "chevron.left")
-                        .font(.headline).frame(maxWidth: .infinity, alignment: .leading).padding(18)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 20)
+                        .frame(height: 48)
+                        .background(Color.white.opacity(0.10), in: RoundedRectangle(cornerRadius: 15))
                 }
                 .buttonStyle(.plain)
                 .padding(.bottom, 24)
@@ -71,11 +76,12 @@ private struct SettingsSidebar: View {
 }
 
 struct GlobalSettingsView: View {
+    let back: () -> Void
     @State private var selected = "general"
 
     var body: some View {
         HStack(spacing: 0) {
-            SettingsSidebar(items: globalItems, selected: $selected, back: nil)
+            SettingsSidebar(items: globalItems, selected: $selected, back: back)
             Group {
                 switch selected {
                 case "steam": GlobalSteamSettings()

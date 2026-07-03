@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
     @State private var route: AppRoute = .page(.home)
+    @State private var settingsReturnRoute: AppRoute = .page(.home)
     @State private var showSearch = false
 
     private var selectedPage: AppPage? {
@@ -30,7 +31,7 @@ struct RootView: View {
                 case .page(.downloads):
                     DownloadsView()
                 case .page(.settings):
-                    GlobalSettingsView()
+                    GlobalSettingsView(back: { navigate(settingsReturnRoute) })
                 case .detail(let game):
                     GameDetailView(game: game, navigate: navigate)
                 case .gameSettings:
@@ -62,6 +63,10 @@ struct RootView: View {
     private func navigate(_ destination: AppRoute) {
         guard route != destination else {
             return
+        }
+
+        if destination == .page(.settings) {
+            settingsReturnRoute = route
         }
 
         route = destination
