@@ -48,9 +48,11 @@ struct RootView: View {
                     .zIndex(1)
             }
 
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .overlay {
             if showSearch {
                 SearchOverlay(isPresented: $showSearch)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .zIndex(10)
             }
         }

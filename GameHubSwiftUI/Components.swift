@@ -153,51 +153,56 @@ struct GameCard: View {
 struct SearchOverlay: View {
     @Binding var isPresented: Bool
     @State private var query = "Baldur's Gate 3"
+    private let panelWidth: CGFloat = 620
     private let suggestions = ["Baldur's Gate 3", "Cyberpunk 2077", "Slay the Spire 2", "Valheim", "SILENT HILL f", "Little Nightmares II", "Terraria", "God of War Ragnarök", "Satisfactory", "Stardew Valley"]
 
     var body: some View {
-        ZStack {
-            Color.black.opacity(0.62)
-                .background(.ultraThinMaterial)
-                .ignoresSafeArea()
-                .onTapGesture { isPresented = false }
+        GeometryReader { proxy in
+            ZStack {
+                Color.black.opacity(0.62)
+                    .background(.ultraThinMaterial)
+                    .contentShape(Rectangle())
+                    .onTapGesture { isPresented = false }
 
-            VStack(spacing: 0) {
-                HStack(spacing: 12) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                    TextField("Search", text: $query)
-                        .textFieldStyle(.plain)
-                        .font(.title3)
-                        .onSubmit { isPresented = false }
-                }
-                .padding(20)
-
-                Divider().opacity(0.5)
-
-                VStack(alignment: .leading, spacing: 14) {
-                    HStack {
-                        Text("Recommended games").font(.headline)
-                        Spacer()
-                        Label("Refresh", systemImage: "arrow.clockwise").foregroundStyle(.secondary)
+                VStack(spacing: 0) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "magnifyingglass")
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
+                        TextField("Search", text: $query)
+                            .textFieldStyle(.plain)
+                            .font(.title3)
+                            .onSubmit { isPresented = false }
                     }
-                    FlowLayout(spacing: 9) {
-                        ForEach(suggestions, id: \.self) { suggestion in
-                            Button(suggestion) { query = suggestion }
-                                .buttonStyle(.plain)
-                                .padding(.horizontal, 13)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.10), in: Capsule())
+                    .padding(20)
+
+                    Divider().opacity(0.5)
+
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            Text("Recommended games").font(.headline)
+                            Spacer()
+                            Label("Refresh", systemImage: "arrow.clockwise").foregroundStyle(.secondary)
+                        }
+                        FlowLayout(spacing: 9) {
+                            ForEach(suggestions, id: \.self) { suggestion in
+                                Button(suggestion) { query = suggestion }
+                                    .buttonStyle(.plain)
+                                    .padding(.horizontal, 13)
+                                    .padding(.vertical, 6)
+                                    .background(Color.white.opacity(0.10), in: Capsule())
+                            }
                         }
                     }
+                    .padding(20)
                 }
-                .padding(20)
+                .frame(width: min(panelWidth, max(320, proxy.size.width - 64)))
+                .glassPanel(radius: 18)
+                .shadow(color: .black.opacity(0.5), radius: 40)
             }
-            .frame(width: 620)
-            .glassPanel(radius: 18)
-            .shadow(color: .black.opacity(0.5), radius: 40)
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .center)
         }
+        .ignoresSafeArea()
         .transition(.opacity)
     }
 }
