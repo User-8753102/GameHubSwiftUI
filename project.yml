@@ -1,0 +1,29 @@
+name: GameHubSwiftUI
+options:
+  bundleIdPrefix: com.louisgilles
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+targets:
+  GameHubSwiftUI:
+    type: application
+    platform: macOS
+    sources:
+      - path: GameHubSwiftUI
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.gamemac.www
+        PRODUCT_NAME: GameHub
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: GameHubSwiftUI/Info.plist
+        MARKETING_VERSION: 0.9.0-private
+        CURRENT_PROJECT_VERSION: 1
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: YES
+        COMBINE_HIDPI_IMAGES: YES
+    scheme:
+      testTargets: []
