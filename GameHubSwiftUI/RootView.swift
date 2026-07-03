@@ -39,7 +39,10 @@ struct RootView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .layoutPriority(0)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .clipped()
 
             if showSearch {
                 SearchOverlay(isPresented: $showSearch)
