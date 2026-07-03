@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct Sidebar: View {
+    static let width: CGFloat = 86
+
     let selected: AppPage?
     let navigate: (AppRoute) -> Void
     let showSearch: () -> Void
 
-    private let railWidth: CGFloat = 86
+    private let railWidth = Sidebar.width
     private let buttonSize: CGFloat = 50
     private let mainPages: [AppPage] = [.home, .rankings, .browse, .library]
 

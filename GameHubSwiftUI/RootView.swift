@@ -9,40 +9,43 @@ struct RootView: View {
         return nil
     }
 
+    private var showsSidebar: Bool {
+        route != .page(.settings) && route != .gameSettings
+    }
+
     var body: some View {
-        ZStack {
+        ZStack(alignment: .leading) {
             AmbientBackground()
 
-            HStack(spacing: 0) {
-                if route != .page(.settings), route != .gameSettings {
-                    Sidebar(selected: selectedPage, navigate: navigate, showSearch: { showSearch = true })
+            Group {
+                switch route {
+                case .page(.home):
+                    HomeView(navigate: navigate)
+                case .page(.rankings):
+                    RankingsView(navigate: navigate)
+                case .page(.browse):
+                    BrowseView(navigate: navigate)
+                case .page(.library):
+                    LibraryView(navigate: navigate)
+                case .page(.downloads):
+                    DownloadsView()
+                case .page(.settings):
+                    GlobalSettingsView()
+                case .detail(let game):
+                    GameDetailView(game: game, navigate: navigate)
+                case .gameSettings:
+                    GameSettingsView(navigate: navigate)
                 }
-
-                Group {
-                    switch route {
-                    case .page(.home):
-                        HomeView(navigate: navigate)
-                    case .page(.rankings):
-                        RankingsView(navigate: navigate)
-                    case .page(.browse):
-                        BrowseView(navigate: navigate)
-                    case .page(.library):
-                        LibraryView(navigate: navigate)
-                    case .page(.downloads):
-                        DownloadsView()
-                    case .page(.settings):
-                        GlobalSettingsView()
-                    case .detail(let game):
-                        GameDetailView(game: game, navigate: navigate)
-                    case .gameSettings:
-                        GameSettingsView(navigate: navigate)
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .layoutPriority(0)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .padding(.leading, showsSidebar ? Sidebar.width : 0)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .clipped()
+
+            if showsSidebar {
+                Sidebar(selected: selectedPage, navigate: navigate, showSearch: { showSearch = true })
+                    .frame(width: Sidebar.width)
+                    .zIndex(1)
+            }
 
             if showSearch {
                 SearchOverlay(isPresented: $showSearch)
