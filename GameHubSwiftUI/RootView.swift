@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RootView: View {
+    @StateObject private var appState = AppState()
     @State private var route: AppRoute = .page(.home)
     @State private var settingsReturnRoute: AppRoute = .page(.home)
     @State private var showSearch = false
@@ -11,46 +12,53 @@ struct RootView: View {
     }
 
     private var showsSidebar: Bool {
-        route != .page(.settings) && route != .gameSettings
+        if route == .page(.settings) { return false }
+        if case .gameSettings = route { return false }
+        return true
     }
 
     var body: some View {
-        ZStack(alignment: .leading) {
-            AmbientBackground()
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                AmbientBackground()
+                    .zIndex(-10)
 
-            Group {
-                switch route {
-                case .page(.home):
-                    HomeView(navigate: navigate)
-                case .page(.rankings):
-                    RankingsView(navigate: navigate)
-                case .page(.browse):
-                    BrowseView(navigate: navigate)
-                case .page(.library):
-                    LibraryView(navigate: navigate)
-                case .page(.downloads):
-                    DownloadsView()
-                case .page(.settings):
-                    GlobalSettingsView(back: { navigate(settingsReturnRoute) })
-                case .detail(let game):
-                    GameDetailView(game: game, navigate: navigate)
-                case .gameSettings:
-                    GameSettingsView(navigate: navigate)
+                Group {
+                    switch route {
+                    case .page(.home):
+                        HomeView(appState: appState, navigate: navigate)
+                    case .page(.rankings):
+                        RankingsView(navigate: navigate)
+                    case .page(.browse):
+                        BrowseView(appState: appState, navigate: navigate)
+                    case .page(.library):
+                        LibraryView(appState: appState, navigate: navigate)
+                    case .page(.downloads):
+                        DownloadsView(appState: appState, navigate: navigate)
+                    case .page(.settings):
+                        GlobalSettingsView(back: { navigate(settingsReturnRoute) })
+                    case .detail(let game):
+                        GameDetailView(appState: appState, game: appState.game(for: game.id) ?? game, navigate: navigate)
+                    case .gameSettings(let game):
+                        GameSettingsView(appState: appState, game: appState.game(for: game.id) ?? game, navigate: navigate)
+                    }
                 }
-            }
-            .padding(.leading, showsSidebar ? Sidebar.width : 0)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .clipped()
+                .padding(.leading, showsSidebar ? Sidebar.width : 0)
+                .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
+                .clipped()
+                .environmentObject(appState)
+                .zIndex(1)
 
-            if showsSidebar {
-                Sidebar(selected: selectedPage, navigate: navigate, showSearch: { showSearch = true })
-                    .frame(width: Sidebar.width)
-                    .layoutPriority(1000)
-                    .zIndex(1)
-            }
+                if showsSidebar {
+                    Sidebar(selected: selectedPage, navigate: navigate, showSearch: { showSearch = true })
+                        .frame(width: Sidebar.width)
+                        .layoutPriority(1000)
+                        .zIndex(2)
+                }
 
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .overlay {
             if showSearch {
                 SearchOverlay(isPresented: $showSearch)

@@ -18,6 +18,7 @@
 		2AC5F884A57CBC3D6A03C627 /* rank_hot.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 15CC3A9F4B7515F3E08ABB40 /* rank_hot.jpg */; };
 		2B4DFC43C7BF1432DA0F4D4E /* rocket.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CF0C5C20BF294C12E097ED2D /* rocket.jpg */; };
 		2E2FAB564569FE8A705DF993 /* orbitalis.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A5EDA639DB06BECD7C5D3BED /* orbitalis.jpg */; };
+		2E84054D54FC04B02172C3F8 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD824B899D49DE4A63051C0 /* AppState.swift */; };
 		33F0F57C5AAFA2469340AD55 /* rank_selling.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 570393C86A0D8FA0E62BE2E2 /* rank_selling.jpg */; };
 		3C5A645B64E60A9391789509 /* bitray.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3CD8C0869E62927C63E417FE /* bitray.jpg */; };
 		3E6E94AE0958CF8D8DC628D7 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1503D99D3DE01EEAA3CB5EAE /* Models.swift */; };
@@ -30,6 +31,7 @@
 		9EA29B29F0BDFCDEC14BB220 /* tray.png in Resources */ = {isa = PBXBuildFile; fileRef = 205D194C80AFDFC90563A5FB /* tray.png */; };
 		9FB15EA58E2EF06064DF5C19 /* tenmillion.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5EE5D9DC92CD8FFF61DEA7C4 /* tenmillion.jpg */; };
 		B91A31D63F901867A0881BDA /* LocalCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6121F8F45CEB9567EDC5F571 /* LocalCredentialStore.swift */; };
+		BAFBC57E7B7C43AAFC704E2B /* GameHubDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134D9D5213D4F4E3AF49F349 /* GameHubDataStore.swift */; };
 		BF19226496D3733FC1AA0556 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9720B646FDD7EA0F3B5D8B7 /* RootView.swift */; };
 		C7B972F301776EC33B230B83 /* assetto.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FA74CD0D93F782C82F74634C /* assetto.jpg */; };
 		CD75E31C602A227A0B5D0686 /* hades.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7E12C249713943C568580193 /* hades.jpg */; };
@@ -41,6 +43,7 @@
 
 /* Begin PBXFileReference section */
 		0D5C7EEEBC3C7AA3CFC737E4 /* buckshot_hero.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = buckshot_hero.jpg; sourceTree = "<group>"; };
+		134D9D5213D4F4E3AF49F349 /* GameHubDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHubDataStore.swift; sourceTree = "<group>"; };
 		1503D99D3DE01EEAA3CB5EAE /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		15CC3A9F4B7515F3E08ABB40 /* rank_hot.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rank_hot.jpg; sourceTree = "<group>"; };
 		169C77117FEA4BAD82E324EA /* cyberpunk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cyberpunk.jpg; sourceTree = "<group>"; };
@@ -55,6 +58,7 @@
 		5EE5D9DC92CD8FFF61DEA7C4 /* tenmillion.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tenmillion.jpg; sourceTree = "<group>"; };
 		6121F8F45CEB9567EDC5F571 /* LocalCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCredentialStore.swift; sourceTree = "<group>"; };
 		67E48F6E8D15D0378D63966B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		6CD824B899D49DE4A63051C0 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		788E285AA051F765201A74B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7E12C249713943C568580193 /* hades.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hades.jpg; sourceTree = "<group>"; };
 		9B16960C05976B735D73CB1A /* slay2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = slay2.jpg; sourceTree = "<group>"; };
@@ -121,9 +125,11 @@
 		A29E1F088D4E1BB7F6E1F931 /* GameHubSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				6CD824B899D49DE4A63051C0 /* AppState.swift */,
 				39987A7AF0386B95C884090A /* Assets.xcassets */,
 				D6EC1B759DE13C49E366DFDC /* Components.swift */,
 				CEE0400AB5AB6B65D38F83E3 /* EngineBridge.swift */,
+				134D9D5213D4F4E3AF49F349 /* GameHubDataStore.swift */,
 				AF5CD58125A67CC4838F2E86 /* GameHubSwiftUIApp.swift */,
 				788E285AA051F765201A74B5 /* Info.plist */,
 				6121F8F45CEB9567EDC5F571 /* LocalCredentialStore.swift */,
@@ -235,8 +241,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E84054D54FC04B02172C3F8 /* AppState.swift in Sources */,
 				0BFDEB64ACDF1EAE6E795E1F /* Components.swift in Sources */,
 				852D6E6BFD0831C2D31D9A14 /* EngineBridge.swift in Sources */,
+				BAFBC57E7B7C43AAFC704E2B /* GameHubDataStore.swift in Sources */,
 				9B617956B6D3F8B109AA6B60 /* GameHubSwiftUIApp.swift in Sources */,
 				B91A31D63F901867A0881BDA /* LocalCredentialStore.swift in Sources */,
 				69DACA9B96DBD874FEBC8514 /* MainViews.swift in Sources */,
